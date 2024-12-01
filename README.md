@@ -4,10 +4,10 @@ This project use machine learning to analyse the sentiment about a purchase on A
 
 ## Software used in this project
 
-Git - Version Control Software
-Pandas - Table management Python Library
-Matplotlib - Plot graphical data with Python
-re - Standard Python REGEX Library
+Git - Version Control Software \
+Pandas - Table management Python Library \
+Matplotlib - Plot graphical data with Python \
+re - Standard Python REGEX Library \
 
 ## Database:
 

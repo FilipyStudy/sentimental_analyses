@@ -9,3 +9,6 @@ Pandas - Table management Python Library
 Matplotlib - Plot graphical data with Python
 re - Standard Python REGEX Library
 
+## Database:
+
+[Kaggle - Amazon reviews for sentimental analyses](https://www.kaggle.com/datasets/bittlingmayer/amazonreviews)

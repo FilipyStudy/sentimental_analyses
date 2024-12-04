@@ -8,6 +8,7 @@ Git - Version Control Software \
 Pandas - Table management Python Library \
 Matplotlib - Plot graphical data with Python \
 re - Standard Python REGEX Library \
+SkLearn - For Python Machine Learning model training \
 
 ## Database:
 

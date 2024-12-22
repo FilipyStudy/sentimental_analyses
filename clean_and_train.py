@@ -5,21 +5,28 @@ import re
 from pathlib import Path
 import random
 import numpy as np
+import nltk
+from nltk.tokenize import word_tokenize
 
+#Not random stuff
 DB_PATH = Path('database')
 REGEX_NUMBER = re.compile('[0-3]')
 REGEX_PUNCTUATION = re.compile('[A-Za-z ]')
+stopwords = nltk.corpus.stopwords.words('english')
 
-
+#Regex function to get numbers
 def regex_number(x):
     value = REGEX_NUMBER.findall(x)
     return str(value[0])
 
-
+#Regex function to get out the punctuation
 def regex_punctuation(x):
     value = REGEX_PUNCTUATION.findall(x)
-    return "".join([i for i in value])
+    return "".join([i for i in value]).lower()
     
+
+#Define the lambda function to remove stop words from the text
+remove_stopwords = lambda x: [word for word in x if word not in stopwords]
 
 #Extract, Transform and Load the data. Aka ETL.
 try:
@@ -43,6 +50,14 @@ try:
     test_dataframe['rating'] = test_dataframe['rating'].apply(regex_number)
     train_dataframe['review'] = train_dataframe['review'].apply(regex_punctuation)
     test_dataframe['review'] = test_dataframe['review'].apply(regex_punctuation)
+
+    #Tokenize the text
+    train_dataframe['review'] = train_dataframe['review'].apply(word_tokenize)
+    test_dataframe['review'] = test_dataframe['review'].apply(word_tokenize)
+    
+    #Remove Stop Words.
+    train_dataframe['review'] = train_dataframe['review'].apply(remove_stopwords)
+    test_dataframe['review'] = test_dataframe['review'].apply(remove_stopwords)
 
     #Print the DataFrame for debugging.
     print(train_dataframe.head())

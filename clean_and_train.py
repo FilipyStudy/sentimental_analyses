@@ -8,6 +8,7 @@ import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
 import gc
+import spacy
 
 #Not random stuff
 DB_PATH = Path('database')
@@ -40,10 +41,10 @@ try:
         train_file.close()
         gc.collect()
 
-        #Remove NaN column
-        train_dataframe = train_dataframe.drop(2, axis=1)
+    #Remove NaN column
+    train_dataframe = train_dataframe.drop(2, axis=1)
     
-#Rename the header of the DataFrame.
+    #Rename the header of the DataFrame.
     headers = ['rating', 'review']
     train_dataframe.rename({0: headers[0], 1: headers[1]}, axis=1, inplace=True)
 
@@ -52,17 +53,16 @@ try:
     train_dataframe['rating'] = train_dataframe['rating'].apply(regex_number)
     train_dataframe['review'] = train_dataframe['review'].apply(regex_punctuation)
 
-
+    
+    #Tokenize the text.
     print('Applying func: word_tokenize from NLTK')
-    #Tokenize the text
     train_dataframe['review'] = train_dataframe['review'].apply(word_tokenize)
     
+    #Remove StopWords.
     print('Applying func: remove_stopwords')
-    #Remove Stop Words.
     train_dataframe['review'] = train_dataframe['review'].apply(remove_stopwords)
 
-    #Print the DataFrame for debugging.
-    print(train_dataframe.head())
-
+    #Save the dataframe as a CSV file for further use.
+    train_dataframe.to_csv('train_dataframe.csv', index=False)
 except Exception as e:
     print('An exception as ocurred: ' + str(e))

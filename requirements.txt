@@ -1,0 +1,9 @@
+pandas
+matplotlib
+scikit-learn
+pathlib
+numpy
+nltk
+spacy
+
+

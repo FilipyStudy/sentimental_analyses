@@ -26,6 +26,10 @@ def regex_punctuation(x):
     value = REGEX_PUNCTUATION.findall(x)
     return "".join([i for i in value]).lower()
     
+#Lemmatize the words
+def lemmatizer(listOfDF):
+    return [i for i in listOfDF: wnl.lemmatize(i)]
+
 
 #Define the lambda function to remove stop words from the text
 remove_stopwords = lambda x: [word for word in x if word not in stopwords]
@@ -61,8 +65,16 @@ try:
     #Remove StopWords.
     print('Applying func: remove_stopwords')
     train_dataframe['review'] = train_dataframe['review'].apply(remove_stopwords)
+    
+    #Apply the lemmatization function.
+    print('Applying func: lemmatizer')
+    train_dataframe['review'] = train_dataframe['review'].apply(lemmatizer)
 
     #Save the dataframe as a CSV file for further use.
     train_dataframe.to_csv('train_dataframe.csv', index=False)
+    
+    if DB_PATH.exitsts():
+        train_file = open(r'database/train_data.csv', 'r')
+        train_dataframe = pd.read_csv()
 except Exception as e:
     print('An exception as ocurred: ' + str(e))

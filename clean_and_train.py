@@ -7,8 +7,15 @@ import random
 import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 import gc
 import spacy
+#Prefer the use of a GPU if it's available
+spacy.prefer_gpu()
+core_lang = spacy.load('en_core_web_lg')
+
+#Create a new instance of the WordNetLemmatizer function
+wnl = WordNetLemmatizer()
 
 #Not random stuff
 DB_PATH = Path('database')
@@ -28,17 +35,23 @@ def regex_punctuation(x):
     
 #Lemmatize the words
 def lemmatizer(listOfDF):
-    return [i for i in listOfDF: wnl.lemmatize(i)]
-
+    return [wnl.lemmatize(i) for i in listOfDF]
 
 #Define the lambda function to remove stop words from the text
 remove_stopwords = lambda x: [word for word in x if word not in stopwords]
+
+#Transform the label into an array of word vector's
+word2vec = lambda x: core_lang(x).vector
+
+#Turn back the list into a String
+turn_into_string = lambda x: " ".join(x)
 
 #Extract, Transform and Load the data. Aka ETL.
 try:
     if DB_PATH.exists():
         train_file = open(r'database/train_data.txt', 'r')
-
+        
+        #Open the database
         train_dataframe = pd.read_fwf(train_file, sep=',', header=None, encoding='utf-8')
         
         #Close the files and clean the memory to prevent OOM
@@ -70,11 +83,20 @@ try:
     print('Applying func: lemmatizer')
     train_dataframe['review'] = train_dataframe['review'].apply(lemmatizer)
 
+    #Turn the label back into a String
+    print('Applying func: turn_into_string')
+    train_dataframe['review'] = train_dataframe['review'].apply(turn_into_string)
+
+    #Transform the doc into an array of string vector
+    print('Applying func: word2vec')
+    train_dataframe['review'] = train_dataframe['review'].apply(word2vec)
+
     #Save the dataframe as a CSV file for further use.
     train_dataframe.to_csv('train_dataframe.csv', index=False)
     
     if DB_PATH.exitsts():
-        train_file = open(r'database/train_data.csv', 'r')
+        train_file = open(r'train_data.csv', 'r')
         train_dataframe = pd.read_csv()
+        train_file.close()
 except Exception as e:
     print('An exception as ocurred: ' + str(e))

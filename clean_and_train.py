@@ -95,7 +95,7 @@ try:
     train_dataframe.to_csv('train_dataframe.csv', index=False)
     
     if DB_PATH.exitsts():
-        train_file = open(r'train_data.csv', 'r')
+        train_file = open(r'train_dataframe.csv', 'r')
         train_dataframe = pd.read_csv()
         train_file.close()
 except Exception as e:

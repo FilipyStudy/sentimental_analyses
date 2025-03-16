@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib as plt
 import sklearn
+from sklearn.linear_model import LogisticRegression
 import re
 from pathlib import Path
 import random
@@ -65,30 +66,23 @@ try:
     headers = ['rating', 'review']
     train_dataframe.rename({0: headers[0], 1: headers[1]}, axis=1, inplace=True)
 
-    print('Applying func: regex_number and regex_punctuation')
     #Clean the DataFrame.
     train_dataframe['rating'] = train_dataframe['rating'].apply(regex_number)
     train_dataframe['review'] = train_dataframe['review'].apply(regex_punctuation)
-
     
     #Tokenize the text.
-    print('Applying func: word_tokenize from NLTK')
     train_dataframe['review'] = train_dataframe['review'].apply(word_tokenize)
     
     #Remove StopWords.
-    print('Applying func: remove_stopwords')
     train_dataframe['review'] = train_dataframe['review'].apply(remove_stopwords)
     
     #Apply the lemmatization function.
-    print('Applying func: lemmatizer')
     train_dataframe['review'] = train_dataframe['review'].apply(lemmatizer)
 
     #Turn the label back into a String
-    print('Applying func: turn_into_string')
     train_dataframe['review'] = train_dataframe['review'].apply(turn_into_string)
 
     #Transform the doc into an array of string vector
-    print('Applying func: word2vec')
     train_dataframe['review'] = train_dataframe['review'].apply(word2vec)
 
     #Save the dataframe as a CSV file for further use.
@@ -96,7 +90,8 @@ try:
     
     if DB_PATH.exitsts():
         train_file = open(r'train_dataframe.csv', 'r')
-        train_dataframe = pd.read_csv()
+        train_dataframe = pd.read_csv(train_file)
         train_file.close()
+
 except Exception as e:
     print('An exception as ocurred: ' + str(e))

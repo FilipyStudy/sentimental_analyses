@@ -33,7 +33,6 @@ std::vector<long double> SoftMax(std::vector<long double> a){
 	return a;
 	} 
 
-
 std::vector<long double> Slope(std::vector<long double> Y, std::vector<long double>X){
 	int n;
 	long double xySum,
@@ -56,9 +55,13 @@ std::vector<long double> Slope(std::vector<long double> Y, std::vector<long doub
 	return slopeResult;
 	};
 
-#TODO: MSE function
-
-long double MeanSquaredError(){}
+long double MeanSquaredError(std::vector<long double> observedVector, std::vector<long double> predictedVector){
+	long double totalSum = 0;
+	for(int i = 0; i < observedVector.size(); i++){
+		totalSum += ExpFloat((observedVector[i] + predictedVector[i]) , 2);
+	}
+	return totalSum / 0.5;
+}
 
 #TODO: Finish the simple linear regression model calc;
 std::vector<long double> SimpleLinearRegression (

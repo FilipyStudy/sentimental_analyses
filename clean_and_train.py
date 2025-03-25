@@ -11,10 +11,14 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import gc
 import spacy
+import logging
+
+logger = loggin.getLogger(__name__)
+
 #Prefer the use of a GPU if it's available
 spacy.prefer_gpu()
 core_lang = spacy.load('en_core_web_lg')
-
+logger.info("Downloading spacy english core language.")
 #Create a new instance of the WordNetLemmatizer function
 wnl = WordNetLemmatizer()
 
@@ -50,6 +54,7 @@ turn_into_string = lambda x: " ".join(x)
 #Extract, Transform and Load the data. Aka ETL.
 try:
     if DB_PATH.exists():
+        logger.info('Opening train dataset')
         train_file = open(r'database/train_data.txt', 'r')
         
         #Open the database
@@ -59,6 +64,7 @@ try:
         train_file.close()
         gc.collect()
 
+    logger.info('Removin NaN values from the train dataset.')
     #Remove NaN column
     train_dataframe = train_dataframe.drop(2, axis=1)
     
@@ -67,27 +73,36 @@ try:
     train_dataframe.rename({0: headers[0], 1: headers[1]}, axis=1, inplace=True)
 
     #Clean the DataFrame.
+    logger.info("Aplying regex punctuation")
     train_dataframe['rating'] = train_dataframe['rating'].apply(regex_number)
     train_dataframe['review'] = train_dataframe['review'].apply(regex_punctuation)
     
+    logger.info("Aplying word_tokenize")
+
     #Tokenize the text.
     train_dataframe['review'] = train_dataframe['review'].apply(word_tokenize)
-    
+     
+    logger.info("Aplying the removal of stop words.")
     #Remove StopWords.
     train_dataframe['review'] = train_dataframe['review'].apply(remove_stopwords)
     
+    logger.info('Aplying lemmatizer')
     #Apply the lemmatization function.
     train_dataframe['review'] = train_dataframe['review'].apply(lemmatizer)
-
+    
+    logger.info('Aplying turn into string function to review column')
     #Turn the label back into a String
     train_dataframe['review'] = train_dataframe['review'].apply(turn_into_string)
-
+    
+    logger.info('Aplying word2vec function')
     #Transform the doc into an array of string vector
     train_dataframe['review'] = train_dataframe['review'].apply(word2vec)
-
+    
+    logger.info('Save the dataset in csv format')
     #Save the dataframe as a CSV file for further use.
     train_dataframe.to_csv('train_dataframe.csv', index=False)
     
+    logger.info('opening the train.csv dataset')   
     if DB_PATH.exitsts():
         train_file = open(r'train_dataframe.csv', 'r')
         train_dataframe = pd.read_csv(train_file)

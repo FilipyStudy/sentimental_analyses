@@ -3,6 +3,11 @@
 #include <Python.h>
 #include <stdio.h>
 #include <vector>
+
+
+#ifndef LOGISTICREGRESSION_H
+#define LOGISTICREGRESSION_H
+
 class RegressionModels
 {
 
@@ -73,3 +78,5 @@ std::vector<long double> SimpleLinearRegression (
 	return valuesVector;
 	}
 }
+
+#endif

@@ -1,3 +1,5 @@
 #Import the python image
 FROM python:3.12
+RUN source /.venv/bin/activate
 RUN python3 pip install -r requirements.txt
+RUN python3 -m flask --app webpage/setup run

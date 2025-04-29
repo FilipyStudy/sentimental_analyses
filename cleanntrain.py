@@ -6,14 +6,14 @@ import re
 from pathlib import Path
 import numpy as np
 import nltk
-ntlk.download('all')
+nltk.download('all')
 from nltk.tokenize import word_tokenize
-from ntlk.stem import WordNetLemmatizer
+from nltk.stem import WordNetLemmatizer
 import gc
 import spacy
 import logging
-logger = loggin.getLogger(__name__)
-loggin .basicCOnfig(filename = 'cleantrain.log', level=loggin.INFO)
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename = 'cleantrain.log', level=logging.INFO)
 
 logger.info('Started')
 #Prefer the use of a GPU if it's available
@@ -44,7 +44,10 @@ def regex_punctuation(x):
     
 #Lemmatize the words
 def lemmatizer(listOfDF):
-    return [i for i in listOfDF: wnl.lemmatize(i)]
+    return [wnl.lemmatize(i) for i in listOfDF]
+
+def narraycolumn(x):
+    return np.fromstring(x.values, count300)
 
 #Define the lambda function to remove stop words from the text
 remove_stopwords = lambda x: [word for word in x if word not in stopwords]
@@ -108,6 +111,16 @@ try:
         train_file = open(r'database/train_data.csv', 'r')
         train_dataframe = pd.read_csv()
         train_file.close()
+
+
+    logger.info('Aplying to_numpy() method to columns "rating" and "review"')
+    #Clening data once more.
+    train_dataframe['rating'] = train_dataframe['rating'].to_numpy()
+    train_datarame['review'] = train_dataframe['review'].to_numpy()
+    
+    logger.info('Aplying narraycolumn() to each column from "review"')
+    #Converting values to numpy array columns
+    train_dataframe['review'] = train_dataframe['review'].apply(narraycolumn)
 
     #Fit the data in the model
     logger.info('Fitting the model')

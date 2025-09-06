@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import nltk
 nltk.download('all')
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import w1ord_tokenize
 from nltk.stem import WordNetLemmatizer
 import gc
 import spacy

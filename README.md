@@ -1,3 +1,5 @@
+![Sentimental_Analyses](https://imgur.com/4ljYehj "Sen_ana")
+
 # Sentimental Analyses
 
 This project use machine learning to analyse the sentiment about a purchase on Amazon.
